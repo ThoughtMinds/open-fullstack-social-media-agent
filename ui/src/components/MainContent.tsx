@@ -39,23 +39,23 @@ const MainContent = () => {
       </div>
       <div className="grid gap-4">
         {scheduledItems.map((item) => (
-          <Card key={item.id} className="hover:shadow-lg transition-shadow dark:bg-gray-700 dark:border-gray-600">
+          <Card key={item.id} className="hover:shadow-lg transition-shadow dark:bg-black dark:border-gray-600">
             <div className="flex justify-between items-start p-4">
               <CardContent className="p-0 pr-4">
                 <p className="text-md dark:text-gray-200">
                   #{item.id} URL: {item.url}
                 </p>
-                <div className="flex space-x-2 mt-2">
-                  <button className="px-2 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600">
-                    Details
-                  </button>
-                </div>
               </CardContent>
               <CardContent className="p-0 text-right">
                 <CardTitle className="text-lg font-semibold dark:text-gray-100">
                   {item.status}
                 </CardTitle>
                 <p className="text-sm text-gray-500 dark:text-gray-400">{item.date}</p>
+                <div className="flex justify-end space-x-2 mt-2">
+                  <button className="px-2 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600">
+                    Details
+                  </button>
+                </div>
               </CardContent>
             </div>
           </Card>
