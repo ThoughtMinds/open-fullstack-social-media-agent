@@ -1,7 +1,7 @@
 import "./globals.css";
 import { ReactNode } from "react";
 import { CopilotKit } from "@copilotkit/react-core";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import "@copilotkit/react-ui/styles.css";
 
@@ -23,6 +23,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               enableSystem
               disableTransitionOnChange
             >
+              <SidebarTrigger />
               {children}
             </ThemeProvider>
           </SidebarProvider>
