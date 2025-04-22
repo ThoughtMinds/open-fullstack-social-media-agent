@@ -4,12 +4,13 @@ import { CopilotKit } from "@copilotkit/react-core";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import "@copilotkit/react-ui/styles.css";
+import { AuthProvider } from "@/context/AuthContext";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body>
-        {/* Use the public api key you got from Copilot Cloud  */}
+        <AuthProvider>
         <CopilotKit 
         runtimeUrl="/api/copilotkit"
         showDevConsole={false}
@@ -28,6 +29,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             </ThemeProvider>
           </SidebarProvider>
         </CopilotKit>
+        </AuthProvider>
       </body>
     </html>
   );
