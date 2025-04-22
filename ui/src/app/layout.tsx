@@ -10,7 +10,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <body>
         {/* Use the public api key you got from Copilot Cloud  */}
-        <CopilotKit publicApiKey="<your-copilot-cloud-public-api-key>">
+        <CopilotKit 
+        runtimeUrl="/api/copilotkit"
+        showDevConsole={false}
+        
+        
+        >
           <SidebarProvider>
             <ThemeProvider
               attribute="class"
