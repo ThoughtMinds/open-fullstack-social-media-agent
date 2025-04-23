@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -15,23 +15,35 @@ export default function SignUpForm() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const { signUp } = useAuth();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setLoading(true);
 
     if (password !== confirmPassword) {
       setError("Passwords do not match");
+      setLoading(false);
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters.");
+      setLoading(false);
       return;
     }
 
     try {
       await signUp(email, password);
-      router.push("/dashboard");
+      router.push("/sign-in");
     } catch (error: any) {
-      setError(error.message);
+      console.error("Sign-up error:", error); // Debug
+      setError(error.message || "Failed to sign up.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -57,6 +69,7 @@ export default function SignUpForm() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email"
               required
+              disabled={loading}
             />
           </div>
           <div className="space-y-2">
@@ -68,6 +81,7 @@ export default function SignUpForm() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
               required
+              disabled={loading}
             />
           </div>
           <div className="space-y-2">
@@ -79,16 +93,17 @@ export default function SignUpForm() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="Confirm Password"
               required
+              disabled={loading}
             />
           </div>
         </CardContent>
         <CardFooter className="flex flex-col gap-4">
-          <Button type="submit" className="w-full">
-            Sign Up
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? "Signing Up..." : "Sign Up"}
           </Button>
           <p className="text-sm text-muted-foreground">
             Already have an account?{" "}
-            <Link href="/(auth)/sign-in" className="text-primary hover:underline">
+            <Link href="/sign-in" className="text-primary hover:underline">
               Sign in
             </Link>
           </p>

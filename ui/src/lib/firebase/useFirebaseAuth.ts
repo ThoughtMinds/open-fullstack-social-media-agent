@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
+import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "@/utils/firebase.browser";
-import { onAuthStateChanged } from "firebase/auth";
 import { formatAuthUser } from "./auth";
 
 interface AuthUser {
@@ -12,14 +12,13 @@ export default function useFirebaseAuth() {
   const [authUser, setAuthUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const authStateChanged = async (authState: any) => {
+  const authStateChanged = async (authState: User | null) => {
     if (!authState) {
       setAuthUser(null);
       setLoading(false);
       return;
     }
 
-    setLoading(true);
     const formattedUser = formatAuthUser(authState);
     setAuthUser(formattedUser);
     setLoading(false);

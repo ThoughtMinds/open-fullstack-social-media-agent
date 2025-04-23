@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -14,17 +14,22 @@ export default function SignInForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const { signIn } = useAuth();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setLoading(true);
     try {
       await signIn(email, password);
-      router.push("/dashboard");
+      router.push("/home");
     } catch (error: any) {
-      setError(error.message);
+      console.error("Sign-in error:", error); // Debug
+      setError(error.message || "Failed to sign in.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -34,7 +39,9 @@ export default function SignInForm() {
         <CardTitle>Sign In</CardTitle>
         <CardDescription>Enter your credentials to access your account</CardDescription>
       </CardHeader>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}
+        className="space-y-4"
+      >
         <CardContent className="space-y-4">
           {error && (
             <Alert variant="destructive">
@@ -50,6 +57,7 @@ export default function SignInForm() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email"
               required
+              disabled={loading}
             />
           </div>
           <div className="space-y-2">
@@ -61,16 +69,17 @@ export default function SignInForm() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
               required
+              disabled={loading}
             />
           </div>
         </CardContent>
         <CardFooter className="flex flex-col gap-4">
-          <Button type="submit" className="w-full">
-            Sign In
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? "Signing In..." : "Sign In"}
           </Button>
           <p className="text-sm text-muted-foreground">
             Don't have an account?{" "}
-            <Link href="/(auth)/sign-up" className="text-primary hover:underline">
+            <Link href="/sign-up" className="text-primary hover:underline">
               Sign up
             </Link>
           </p>
