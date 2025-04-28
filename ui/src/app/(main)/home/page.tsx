@@ -113,12 +113,12 @@ const Main = () => {
     }
   });
 
-  useCoAgentStateRender({
-    name: "generate_post",
-    render: ({ state }) => {
-      return <div>State: {JSON.stringify(state,null,2)}</div>;
-    },
-  });
+  // useCoAgentStateRender({
+  //   name: "generate_post",
+  //   render: ({ state }) => {
+  //     return <div>State: {JSON.stringify(state,null,2)}</div>;
+  //   },
+  // });
 
   useCopilotAction({
     name: "get_blog_url",
