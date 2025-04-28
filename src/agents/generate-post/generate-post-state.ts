@@ -83,6 +83,7 @@ export type GeneratePostState = typeof GeneratePostAnnotation.State;
 export type GeneratePostUpdate = typeof GeneratePostAnnotation.Update;
 
 export const GeneratePostInputAnnotation = Annotation.Root({
+  ...CopilotKitStateAnnotation.spec,
   /**
    * The links to use to generate a post.
    */
@@ -90,6 +91,7 @@ export const GeneratePostInputAnnotation = Annotation.Root({
 });
 
 export const GeneratePostConfigurableAnnotation = Annotation.Root({
+  ...CopilotKitStateAnnotation.spec,
   /**
    * Whether to post to the LinkedIn organization or the user's profile.
    * If true, [LINKEDIN_ORGANIZATION_ID] is required.
