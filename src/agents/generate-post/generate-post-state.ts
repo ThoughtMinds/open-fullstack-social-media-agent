@@ -8,6 +8,7 @@ import {
 } from "./constants.js";
 import { DateType } from "../types.js";
 import { VerifyLinksResultAnnotation } from "../verify-links/verify-links-state.js";
+import { CopilotKitStateAnnotation } from "@copilotkit/sdk-js/langgraph";
 
 export type LangChainProduct = "langchain" | "langgraph" | "langsmith";
 
@@ -23,6 +24,7 @@ export type YouTubeVideoSummary = {
 };
 
 export const GeneratePostAnnotation = Annotation.Root({
+  ...CopilotKitStateAnnotation.spec,
   /**
    * The links to use to generate a post.
    */

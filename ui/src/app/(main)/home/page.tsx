@@ -8,10 +8,16 @@ import {
   CopilotKit,
   useCopilotAction,
   useCopilotReadable,
+  useCoAgentStateRender,
+  useCoAgent
 } from "@copilotkit/react-core";
 import { CopilotSidebar } from "@copilotkit/react-ui";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import ProtectedRoute from "@/components/ProtectedRoute";
+
+type AgentState = {
+  links:Array<string>
+}
 
 const HomePage = () => {
   return (
@@ -23,7 +29,7 @@ const HomePage = () => {
         <CopilotKit runtimeUrl="/api/copilotkit">
           <CopilotSidebar
             instructions={
-              "You are assisting the user as best as you can. Answer in the best way possible given the data you have."
+              "You are a social media manager at a marketing firm. your job is to generate content for a social media post from a url that is given by user. use the generate_post agent to create the post content"
             }
             labels={{
               initial: "Welcome to the app! How can I help you?",
@@ -49,11 +55,21 @@ const Main = () => {
   ];
 
   // Make images readable by Copilot
-  useCopilotReadable({
-    description: "List of available images",
-    value: images,
+  // useCopilotReadable({
+  //   description: "List of available images",
+  //   value: images,
+  // });
+
+  const { state } = useCoAgent<AgentState>({ 
+    name: "generate_post",
   });
 
+  useCoAgentStateRender({
+    name: "generate_post",
+    render: ({ state }) => {
+      return <div>State: {JSON.stringify(state)}</div>;
+    },
+  });
   useCopilotAction({
     name: "displayImages",
     description: "Display a set of hardcoded images in the chat",
@@ -129,6 +145,11 @@ const Main = () => {
     <div className="flex w-full h-screen bg-gray-100 dark:bg-gray-900 overflow-hidden">
       {/* <Sidebar/>
       <MainContent /> */}
+      <div>
+      <h1>Your main content</h1>
+      <p>State: {JSON.stringify(state)}</p>
+    </div>
+      
     </div>
   );
 };
