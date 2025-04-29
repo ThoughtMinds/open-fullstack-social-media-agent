@@ -113,9 +113,6 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
-.copilotKitWindow {
-  width: 60px;
-}
 
 @layer base {
   * {
