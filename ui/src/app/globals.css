@@ -113,6 +113,10 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+.dark .copilot-container {
+  --copilot-kit-background-color: #000000;
+}
+
 
 @layer base {
   * {

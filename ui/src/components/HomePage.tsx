@@ -85,7 +85,7 @@ function Header({}: HeaderProps) {
   const { setOpen, icons, labels } = useChatContext();
   const { authUser } = useAuth();
   return (
-    <div className="dark:bg-[#111111]">
+    <div className="dark:bg-[#000000]">
       <div className="flex justify-between">
         <div className="p-4 font-bold text-2xl text-[#100833] dark:text-white">
           AI Assistant
@@ -164,9 +164,9 @@ function CustomInput({ inProgress, onSend, isVisible }: InputProps) {
   };
 
   const wrapperStyle =
-    "flex gap-2 p-2 mx-4 dark:bg-[#111111] border rounded-lg border-[#BCD6FB]";
+    "flex gap-2 p-2 mx-4 dark:bg-[#000000] border rounded-lg border-[#BCD6FB]";
   const inputStyle =
-    "flex-1 p-1 focus:outline-none focus:border-blue-500 disabled:bg-gray-100 dark:bg-[#111111]";
+    "flex-1 p-1 focus:outline-none focus:border-blue-500 disabled:bg-gray-100 dark:bg-[#000000]";
   const buttonStyle =
     "px-2 py-2 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed";
 
@@ -216,6 +216,7 @@ const HomePage = ({ contentType }: HomePageProps) => {
         <MainContent contentType={contentType} />
 
         {/* <CopilotKit runtimeUrl="/api/copilotkit"> */}
+        <div className="copilot-container">
           <CopilotSidebar
             Header={Header}
             Input={CustomInput}
@@ -232,12 +233,12 @@ const HomePage = ({ contentType }: HomePageProps) => {
           >
             <Main />
           </CopilotSidebar>
+        </div>
         {/* </CopilotKit> */}
       </div>
     </ProtectedRoute>
   );
 };
-
 
 const Main = () => {
   // Hardcoded image URLs
@@ -433,7 +434,6 @@ const Main = () => {
 };
 
 export default HomePage;
-
 
 // "use client"
 

@@ -60,7 +60,9 @@ export function AppSidebar() {
               <div className="absolute left-0 top-0 h-full w-[2px] bg-gradient-to-b from-[#725AF5] to-[#5E97F7] rounded-sm" />
               <div className="flex flex-col pl-2 text-2xl font-semibold transition-all">
                 <div className="font-light font-sans">OPEN</div>{" "}
-                <div className="font-black bg-gradient-to-r from-[#725AF5] to-[#5E97F7] bg-clip-text text-transparent">SOCIAL MEDIA</div>{" "}
+                <div className="font-black bg-gradient-to-r from-[#725AF5] to-[#5E97F7] bg-clip-text text-transparent">
+                  SOCIAL MEDIA
+                </div>{" "}
                 <div className="font-light">AGENT</div>
               </div>
             </div>
@@ -77,7 +79,7 @@ export function AppSidebar() {
                       className={`w-[238px] h-[45px] flex items-center gap-2 ${
                         isActive
                           ? "bg-gradient-to-r from-[#725AF5] to-[#5E97F7] text-white hover:text-white"
-                          : "hover:bg-gray-100"
+                          : "hover:bg-gray-100 hover:text-black"
                       }`}
                     >
                       <Link href={item.url}>
@@ -95,10 +97,19 @@ export function AppSidebar() {
           <div className="flex items-center gap-3">
             <Avatar>
               <AvatarImage src="/path-to-avatar.jpg" alt="John Smith" />
-              <AvatarFallback>JS</AvatarFallback>
+              <AvatarFallback>
+                {authUser?.name
+                  ?.split(" ")
+                  .map((n) => n[0])
+                  .slice(0, 2)
+                  .join("")
+                  .toUpperCase() || "US"}
+              </AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
-              <span className="text-sm font-medium">{authUser?.name || "User"}</span>
+              <span className="text-sm font-medium">
+                {authUser?.name || "User"}
+              </span>
             </div>
           </div>
         </SidebarFooter>
