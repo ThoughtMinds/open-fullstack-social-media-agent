@@ -1,5 +1,24 @@
 import { Client } from "@langchain/langgraph-sdk";
 
+import { client } from "../lib/client";
+
+
+export const threadCreation = {
+  name: "ThreadCreation",
+  description: "Creates a new thread",
+  parameters: [],
+  handler: async () => {
+    const thread_id = await createThread(client);
+    console.log("Thread created");
+
+    return {
+      status: "Thread created successfully",
+      thread_id: thread_id,
+    };
+  },
+};
+
+
 
 
 

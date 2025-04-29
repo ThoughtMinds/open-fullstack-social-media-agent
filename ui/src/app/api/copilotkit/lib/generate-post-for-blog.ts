@@ -16,11 +16,19 @@ export const generatePostForBlog = {
       description: "URL of the blog the user wants to create a post for",
       required: true,
     },
-  ],
-  handler: async ({ link }: { link: string }) => {
-    // Use the createThread function
-    const thread_id = await createThread(client);
+    {
+      name: "thread_id",
+      type: "string",
+      description: "the thread_id of the post creation process",
+      required: true,
+    },
 
+
+  ],
+  handler: async ({ link, thread_id }: { link: string, thread_id:string }) => {
+    // Use the createThread function
+    // const thread_id = await createThread(client);
+    
     const run = await client.runs.create(thread_id, "generate_post", {
       input: {
         links: [link],
@@ -33,7 +41,14 @@ export const generatePostForBlog = {
         },
       },
     });
+    console.log("generate post called")
 
-    return { status: "Post generation started", run_id: run.run_id };
+    return { 
+      status: "Post generation started", 
+      run_id: run.run_id,
+      thread_id: thread_id 
+    };
   },
 };
+
+

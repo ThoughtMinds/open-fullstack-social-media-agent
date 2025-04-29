@@ -40,6 +40,7 @@ export const getThreadState = {
     },
   ],
   handler: async ({ thread_id }: { thread_id: string }) => {
+    console.log("genereting thread id")
     return await getThreadStateFunc(client, thread_id);
   },
 };
