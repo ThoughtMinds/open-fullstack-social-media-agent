@@ -53,27 +53,27 @@ const serviceAdapter = new LangChainAdapter({
 
 // Initialize CopilotRuntime
 const runtime = new CopilotRuntime({
-  actions: ({ properties, url }) => [
-    generatePostForBlog,
-    threadCreation,
-    getThreadState,
-    updateThreadState,
-    listThreads,
-    schedulePost,
-    createCron,
-    deleteCron,
-    listCrons,
-    getSinglePost,
-    getScheduledPosts
+  // actions: ({ properties, url }) => [
+  //   generatePostForBlog,
+  //   threadCreation,
+  //   getThreadState,
+  //   updateThreadState,
+  //   listThreads,
+  //   schedulePost,
+  //   createCron,
+  //   deleteCron,
+  //   listCrons,
+  //   getSinglePost,
+  //   getScheduledPosts
     
-  ],
+  // ],
   remoteEndpoints: [
     langGraphPlatformEndpoint({
       deploymentUrl: process.env.AGENT_DEPLOYMENT_URL || "http://127.0.0.1:54367",
       langsmithApiKey: process.env.LANGSMITH_API_KEY,
       agents: [
         {
-          name: "generate_post",
+          name: "generate_post_copilotkit_wrapper",
           description: "Help the user as much as you can",
         },
       ],

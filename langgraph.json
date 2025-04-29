@@ -14,7 +14,8 @@
     "repurposer": "./src/agents/repurposer/index.ts:repurposerGraph",
     "curated_post_interrupt": "./src/agents/curated-post-interrupt/index.ts:curatedPostInterruptGraph",
     "ingest_repurposed_data": "./src/agents/ingest-repurposed-data/index.ts:graph",
-    "repurposer_post_interrupt": "./src/agents/repurposer-post-interrupt/index.ts:repurposerPostInterruptGraph"
+    "repurposer_post_interrupt": "./src/agents/repurposer-post-interrupt/index.ts:repurposerPostInterruptGraph",
+    "generate_post_copilotkit_wrapper": "./src/agents/copilotkit-wrappers/generate-post/index.ts:generatePostWrapperGraph"
   },
   "env": ".env",
   "dependencies": ["."],

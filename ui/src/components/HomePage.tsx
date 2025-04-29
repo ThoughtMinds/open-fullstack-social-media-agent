@@ -256,7 +256,7 @@ const Main = () => {
   // });
 
   const { state, setState } = useCoAgent<AgentState>({
-    name: "generate_post",
+    name: "generate_post_copilotkit_wrapper",
     initialState: {
       links: [],
       [SKIP_CONTENT_RELEVANCY_CHECK]: true,
@@ -266,7 +266,7 @@ const Main = () => {
   });
 
   useCoAgentStateRender({
-    name: "generate_post",
+    name: "generate_post_copilotkit_wrapper",
     render: ({ state }) => {
       console.log(state);
       // return <div>State: {JSON.stringify(state,null,2)}</div>;
