@@ -24,7 +24,7 @@ export default function SignInForm() {
     setLoading(true);
     try {
       await signIn(email, password);
-      router.push("/home");
+      router.push("/dashboard");
     } catch (error: any) {
       console.error("Sign-in error:", error); // Debug
       setError(error.message || "Failed to sign in.");
