@@ -6,6 +6,7 @@ import { formatAuthUser } from "./auth";
 interface AuthUser {
   uid: string;
   email: string | null;
+  name: string
 }
 
 export default function useFirebaseAuth() {

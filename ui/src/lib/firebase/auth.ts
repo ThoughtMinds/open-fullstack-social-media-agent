@@ -32,10 +32,24 @@ export const signOutUser = async () => {
   }
 };
 
-export const formatAuthUser = (user: User) => ({
-  uid: user.uid,
-  email: user.email,
-});
+function formatNameFromEmail(email: string | null): string {
+  if (!email) return "User";
+  return email
+    .split("@")[0]
+    .replace(/[\W_]+/g, " ")
+    .split(" ")
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
+
+export function formatAuthUser(user: User) {
+  return {
+    uid: user.uid,
+    email: user.email,
+    name: formatNameFromEmail(user.email), // ✅ use user.email directly here
+  };
+}
 
 const getErrorMessage = (errorCode: string) => {
   switch (errorCode) {

@@ -8,6 +8,7 @@ import { User } from "firebase/auth";
 interface AuthUser {
   uid: string;
   email: string | null;
+  name: string;
 }
 
 interface AuthContextType {

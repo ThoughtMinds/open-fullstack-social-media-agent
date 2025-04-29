@@ -27,6 +27,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import { BookOpenIcon, SparklesIcon } from "lucide-react";
 import SendIcon from "../assets/send.svg";
 import Image from "next/image";
+import { useAuth } from "@/context/AuthContext";
 
 // Configurable keys
 // LinkedIn
@@ -82,7 +83,7 @@ interface HomePageProps {
 
 function Header({}: HeaderProps) {
   const { setOpen, icons, labels } = useChatContext();
-
+  const { authUser } = useAuth();
   return (
     <div className="dark:bg-[#111111]">
       <div className="flex justify-between">
@@ -96,7 +97,7 @@ function Header({}: HeaderProps) {
         </div>
       </div>
 
-      <div className="pb-4 m-4 h-[310px] border-t border-b border-[#BCD6FB] flex flex-col justify-end items-center space-x-3">
+      <div className="pb-4 m-4 mt-0 h-[270px] border-t border-b border-[#BCD6FB] flex flex-col justify-end items-center space-x-3">
         <img
           src="https://github.com/shadcn.png"
           alt="Avatar"
@@ -107,7 +108,7 @@ function Header({}: HeaderProps) {
             <div className="bg-gradient-to-r from-[#725AF5] to-[#5E97F7] bg-clip-text text-transparent">
               Good morning,
             </div>
-            <div className="dark:text-white">John Smith</div>
+            <div className="dark:text-white">{authUser?.name || "Guest"}</div>
           </h3>
           <p className="text-sm text-[#868686]">
             I am here to assist you with your social media tasks.

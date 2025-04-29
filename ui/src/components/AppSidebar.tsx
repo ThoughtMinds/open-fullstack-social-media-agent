@@ -17,6 +17,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
 
 // Menu items.
 const items = [
@@ -49,6 +50,7 @@ const items = [
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const { authUser } = useAuth();
   return (
     <Sidebar className="font-sans w-[280px]">
       <SidebarContent className="py-[35px] px-[5px]">
@@ -96,7 +98,7 @@ export function AppSidebar() {
               <AvatarFallback>JS</AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
-              <span className="text-sm font-medium">John Smith</span>
+              <span className="text-sm font-medium">{authUser?.name || "User"}</span>
             </div>
           </div>
         </SidebarFooter>
