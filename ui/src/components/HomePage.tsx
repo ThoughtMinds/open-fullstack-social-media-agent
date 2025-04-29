@@ -310,7 +310,7 @@ const Main = () => {
       return (
         <div className="p-0">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-            Select Images
+            Select Cover Image and Schedule
           </h3>
           <div className="grid grid-cols-2 gap-4">
             {imageOptions.map((src, index) => (
