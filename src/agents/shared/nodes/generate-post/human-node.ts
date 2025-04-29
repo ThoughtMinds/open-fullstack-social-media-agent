@@ -141,6 +141,7 @@ export async function humanNode<
         date: defaultDateString,
         // Do not provide an image field if the mode is text only
         ...(!isTextOnlyMode && { image: state.image?.imageUrl ?? "" }),
+        imageOptions:state.imageOptions
       },
     },
     config: {

@@ -1,7 +1,7 @@
 "use client";
 import "@copilotkit/react-ui/styles.css";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Sidebar from "@/components/AppSidebar";
 import MainContent from "@/components/MainContent";
 import {
@@ -9,7 +9,8 @@ import {
   useCopilotAction,
   useCopilotReadable,
   useCoAgentStateRender,
-  useCoAgent
+  useCoAgent,
+  useLangGraphInterrupt
 } from "@copilotkit/react-core";
 import { CopilotSidebar } from "@copilotkit/react-ui";
 import { SidebarTrigger } from "@/components/ui/sidebar";
@@ -59,7 +60,8 @@ type AgentState = {
   image:{
         imageUrl: string;
         mimeType: string;
-      }
+      },
+  imageOptions: string[]
 }
 
 const HomePage = () => {
@@ -103,7 +105,7 @@ const Main = () => {
   //   value: images,
   // });
 
-  const { state,setState } = useCoAgent<AgentState>({ 
+  const { state, setState } = useCoAgent<AgentState>({ 
     name: "generate_post",
     initialState:{
       links:[],
@@ -113,12 +115,14 @@ const Main = () => {
     }
   });
 
-  // useCoAgentStateRender({
-  //   name: "generate_post",
-  //   render: ({ state }) => {
-  //     return <div>State: {JSON.stringify(state,null,2)}</div>;
-  //   },
-  // });
+  useCoAgentStateRender({
+    name: "generate_post",
+    render: ({ state }) => {
+      console.log(state)
+      // return <div>State: {JSON.stringify(state,null,2)}</div>;
+      return <div></div>
+    },
+  });
 
   useCopilotAction({
     name: "get_blog_url",
@@ -135,18 +139,77 @@ const Main = () => {
       setState({...state,links:[link]})
     }
   })
+  useLangGraphInterrupt({
+    render: ({ event, resolve }) => {
+      console.log('interrupt',state,event)
+      const { imageOptions} = event.value[0].action_request.args
+      const [selected, setSelected] = React.useState<string[]>([]);
+
+      const toggleImage = (src: string) => {
+        setSelected((prev) =>
+          prev.includes(src)
+            ? prev.filter((img) => img !== src)
+            : [...prev, src],
+        );
+      };
+
+      const confirmSelection = () => {
+        console.log("Selected images:", selected);
+      };
+
+      return (
+        <div className="p-0">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+            Select Images
+          </h3>
+          <div className="grid grid-cols-2 gap-4">
+            {imageOptions.map((src, index) => (
+              <div
+                key={index}
+                className={`cursor-pointer rounded-lg overflow-hidden shadow-md border-4 transition-all ${
+                  selected.includes(src)
+                    ? "border-blue-500"
+                    : "border-white dark:border-gray-800"
+                }`}
+                onClick={() => toggleImage(src)}
+              >
+                <img
+                  src={src}
+                  alt={`Gallery image ${index + 1}`}
+                  className="w-full h-auto"
+                />
+              </div>
+            ))}
+          </div>
+
+          {selected.length > 0 && (
+            <div className="mt-4">
+              <button
+                onClick={confirmSelection}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
+              >
+                Confirm Selection ({selected.length})
+              </button>
+            </div>
+          )}
+        </div>
+      );
+    }
+});
   // useCopilotAction({
-  //   name: "displayImages",
-  //   description: "Display a set of hardcoded images in the chat",
+  //   name: "select_cover_image",
+  //   description: "show the user a list of imageOptions and let the user select a cover image of the post",
   //   parameters: [
   //     {
-  //       name: "images",
+  //       name: "imageOptions",
   //       type: "string[]",
   //       description: "Array of image URLs to display",
   //       required: true,
   //     },
   //   ],
-  //   render: () => {
+  //   render: ({status ,args}) => {
+  //     console.log(status)
+  //     const { imageOptions} = args;
   //     const [selected, setSelected] = React.useState<string[]>([]);
 
   //     const toggleImage = (src: string) => {
@@ -167,7 +230,7 @@ const Main = () => {
   //           Select Images
   //         </h3>
   //         <div className="grid grid-cols-2 gap-4">
-  //           {images.map((src, index) => (
+  //           {imageOptions.map((src, index) => (
   //             <div
   //               key={index}
   //               className={`cursor-pointer rounded-lg overflow-hidden shadow-md border-4 transition-all ${
