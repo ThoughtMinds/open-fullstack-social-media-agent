@@ -99,7 +99,7 @@ function Header({}: HeaderProps) {
 
       <div className="pb-4 m-4 mt-0 h-[270px] border-t border-b border-[#BCD6FB] flex flex-col justify-end items-center space-x-3">
         <img
-          src="https://github.com/shadcn.png"
+          src="https://unsplash.it/200/200?id=50"
           alt="Avatar"
           className="w-[140px] h-[140px] rounded-full mb-4"
         />
@@ -215,7 +215,7 @@ const HomePage = ({ contentType }: HomePageProps) => {
         <Sidebar />
         <MainContent contentType={contentType} />
 
-        <CopilotKit runtimeUrl="/api/copilotkit">
+        {/* <CopilotKit runtimeUrl="/api/copilotkit"> */}
           <CopilotSidebar
             Header={Header}
             Input={CustomInput}
@@ -232,7 +232,7 @@ const HomePage = ({ contentType }: HomePageProps) => {
           >
             <Main />
           </CopilotSidebar>
-        </CopilotKit>
+        {/* </CopilotKit> */}
       </div>
     </ProtectedRoute>
   );
