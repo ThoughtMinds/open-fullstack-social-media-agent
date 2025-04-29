@@ -8,7 +8,6 @@ import {
 } from "./constants.js";
 import { DateType } from "../types.js";
 import { VerifyLinksResultAnnotation } from "../verify-links/verify-links-state.js";
-import { CopilotKitStateAnnotation } from "@copilotkit/sdk-js/langgraph";
 
 export type LangChainProduct = "langchain" | "langgraph" | "langsmith";
 
@@ -24,7 +23,6 @@ export type YouTubeVideoSummary = {
 };
 
 export const GeneratePostAnnotation = Annotation.Root({
-  ...CopilotKitStateAnnotation.spec,
   /**
    * The links to use to generate a post.
    */
@@ -83,7 +81,6 @@ export type GeneratePostState = typeof GeneratePostAnnotation.State;
 export type GeneratePostUpdate = typeof GeneratePostAnnotation.Update;
 
 export const GeneratePostInputAnnotation = Annotation.Root({
-  ...CopilotKitStateAnnotation.spec,
   /**
    * The links to use to generate a post.
    */
@@ -91,7 +88,6 @@ export const GeneratePostInputAnnotation = Annotation.Root({
 });
 
 export const GeneratePostConfigurableAnnotation = Annotation.Root({
-  ...CopilotKitStateAnnotation.spec,
   /**
    * Whether to post to the LinkedIn organization or the user's profile.
    * If true, [LINKEDIN_ORGANIZATION_ID] is required.

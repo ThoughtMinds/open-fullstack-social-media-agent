@@ -1,14 +1,21 @@
 import { StateGraph, Annotation, LangGraphRunnableConfig, START, END} from "@langchain/langgraph";
 import {generatePostGraph} from "../../generate-post/generate-post-graph.js"
+import { CopilotKitStateAnnotation } from "@copilotkit/sdk-js/langgraph";
 
 
 const WrapperStateAnnotation = Annotation.Root({
     // foo: Annotation<string>,
+    ...CopilotKitStateAnnotation.spec,
     links: Annotation<string>
   });
   const WrapperStateInputAnnotation = Annotation.Root({
+    ...CopilotKitStateAnnotation.spec,
     links: Annotation<string[]>
   });
+
+  const WrapperConfigurableAnnotation=Annotation.Root({
+    ...CopilotKitStateAnnotation.spec,
+  })
 
 
 // export async function generatePostWrapper(
@@ -19,7 +26,7 @@ const WrapperStateAnnotation = Annotation.Root({
 // }
 
 
-const generatePostWrapperBuilder = new StateGraph({stateSchema:WrapperStateAnnotation,input:WrapperStateInputAnnotation})
+const generatePostWrapperBuilder = new StateGraph({stateSchema:WrapperStateAnnotation,input:WrapperStateInputAnnotation},WrapperConfigurableAnnotation)
   .addNode("generate_post_graph",generatePostGraph)
   .addEdge(START, "generate_post_graph")
   .addEdge("generate_post_graph", END)
