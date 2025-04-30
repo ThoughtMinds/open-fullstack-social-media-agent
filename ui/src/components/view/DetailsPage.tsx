@@ -5,6 +5,10 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import CollapsibleSection from "../../components/CollapsibleSection"; // adjust if needed
+import {
+  Markdown,
+} from "@copilotkit/react-ui";
+
 
 type PostItem = {
   id: string;
@@ -45,10 +49,10 @@ const DetailsPage = () => {
 
   useEffect(() => {
     const fetchItem = async () => {
-      const res = await fetch("/api/postData");
-      const data = await res.json();
+      const res = await fetch(`/api/postData/getPost?threadId=${id}`);
+      const foundItem = await res.json();
+      console.log("foundItem",foundItem)
 
-      const foundItem = data.data.find((post: any) => post.thread_id === id);
 
       if (foundItem) {
         setItem({
@@ -134,7 +138,7 @@ const DetailsPage = () => {
                   isOpen={expandedSections.report}
                   onToggle={() => toggleSection("report")}
                 >
-                  <p className="text-sm text-gray-700">{item.report}</p>
+                  <p className="text-sm text-gray-700"><Markdown content={item.report}/></p>
                 </CollapsibleSection>
 
                 <CollapsibleSection
@@ -150,9 +154,9 @@ const DetailsPage = () => {
                   isOpen={expandedSections.imageOptions}
                   onToggle={() => toggleSection("imageOptions")}
                 >
-                  {item.images && item.images.length > 0 ? (
+                  {item?.images && item?.images?.length > 0 ? (
                     <img
-                      src={item.images[0]} // Show only the first image
+                      src={item?.images[0]?.imageUrl} // Show only the first image
                       alt="First image option"
                       className="rounded-md object-cover w-full h-32"
                     />

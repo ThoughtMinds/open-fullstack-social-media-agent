@@ -138,11 +138,13 @@ const CustomAssistantMessage = (props: AssistantMessageProps) => {
   const { icons } = useChatContext();
   const { message, isLoading, subComponent } = props;
 
-  // const avatarStyles = "bg-zinc-400 border-zinc-500 shadow-lg min-h-10 min-w-10 rounded-full text-white flex items-center justify-center";
   const messageStyles =
     "p-[12px] dark:text-black rounded-tl-none rounded-xl bg-[#ECF1FE]";
 
-  // const avatar = <div className={avatarStyles}><SparklesIcon className="h-6 w-6" /></div>
+  // Return null if not loading and no message or subComponent
+  if (!isLoading && !message && !subComponent) {
+    return null;
+  }
 
   return (
     <div className="py-2">

@@ -19,29 +19,120 @@ type ScheduledItem = {
 const Dashboard = () => {
   const [filter, setFilter] = useState("All");
   const [scheduledItems, setScheduledItems] = useState<ScheduledItem[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch("/api/postData");
-      const json = await res.json();
+      setIsLoading(true);
+      try {
+        // Map filter to appropriate API endpoint
+        let endpoint = "/api/postData/getAllPosts";
+        
+        switch (filter) {
+          case "Scheduled":
+            endpoint = "/api/postData/getScheduledPosts";
+            break;
+          case "Action Required":
+            endpoint = "/api/postData/getActionRequiredPosts";
+            break;
+          case "Error":
+            endpoint = "/api/postData/getErrorPosts";
+            break;
+          default:
+            endpoint = "/api/postData/getAllPosts";
+        }
+        console.log("endpoint", endpoint);
+        const res = await fetch(endpoint);
+        const json = await res.json();
+        console.log(`${filter} data:`, json);
 
-      const transformed = json.data.map((item: any) => ({
-        id: item.thread_id,
-        type: item.status,
-        title: item.title,
-        content: item.post,
-        image: item.image?.imageUrl,
-        images: item.images || [],
-        date: new Date(item.scheduleDate).toLocaleString(),
-        description: item.post,
-      }));
+        const transformed = json?.map((item: any) => ({
+          id: item.thread_id,
+          type: item.status,
+          title: item.title,
+          content: item.post,
+          image: item.image?.imageUrl,
+          images: item.images || [],
+          date: new Date(item.scheduleDate).toLocaleString(),
+          description: item.post,
+        }));
 
-      setScheduledItems(transformed);
+        console.log("transformed", transformed);
+
+        setScheduledItems(transformed || []);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setScheduledItems([]);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
+    // Call immediately on mount or filter change
     fetchData();
-  }, []);
+
+    // Set up interval to call every 5 seconds
+    const intervalId = setInterval(fetchData, 5000);
+
+    // Cleanup interval on unmount or filter change
+    return () => clearInterval(intervalId);
+  }, [filter, setIsLoading, setScheduledItems]);
+
+
+
+
+
+  // // Fetch data based on current filter
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     setIsLoading(true);
+  //     try {
+  //       // Map filter to appropriate API endpoint
+  //       let endpoint = "/api/postData/getAllPosts";
+        
+  //       switch (filter) {
+  //         case "Scheduled":
+  //           endpoint = "/api/postData/getScheduledPosts";
+  //           break;
+  //         case "Action Required":
+  //           endpoint = "/api/postData/getActionRequiredPosts";
+  //           break;
+  //         case "Error":
+  //           endpoint = "/api/postData/getErrorPosts";
+  //           break;
+  //         default:
+  //           endpoint = "/api/postData/getAllPosts";
+  //       }
+  //       console.log("endpoint",endpoint)
+  //       const res = await fetch(endpoint);
+  //       const json = await res.json();
+  //       console.log(`${filter} data:`, json);
+
+  //       const transformed = json?.map((item: any) => ({
+  //         id: item.thread_id,
+  //         type: item.status,
+  //         title: item.title,
+  //         content: item.post,
+  //         image: item.image?.imageUrl,
+  //         images: item.images || [],
+  //         date: new Date(item.scheduleDate).toLocaleString(),
+  //         description: item.post,
+  //       }));
+
+  //       console.log("transformed",transformed)
+
+  //       setScheduledItems(transformed || []);
+  //     } catch (error) {
+  //       console.error("Error fetching data:", error);
+  //       setScheduledItems([]);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, [filter]); // Re-fetch when filter changes
 
   const filteredItems =
     filter === "All"
@@ -120,14 +211,14 @@ const Dashboard = () => {
                 <img
                   src={item.image}
                   alt={`${item.title} preview`}
-                  className="w-[309.5px] h-[118px] object-cover rounded-[8px] mb-2"
+                  className="w-[309.5px] h-[118px] object-cover rounded-[8px] mb-2 break-words"
                 />
               )}
 
               {/* Title and Status */}
               <div className="flex justify-between items-center mb-1">
                 <div className="flex items-center gap-2">
-                  <CardTitle className="text-lg font-semibold dark:text-gray-100">
+                  <CardTitle className="text-lg font-semibold dark:text-gray-100 ">
                     {item.title}
                   </CardTitle>
 
@@ -158,23 +249,23 @@ const Dashboard = () => {
               {/* Content Preview */}
               {item.type === "Scheduled" && (
                 <>
-                  <p className="text-gray-700 dark:text-gray-300 mb-1">
+                  <p className="text-gray-700 dark:text-gray-300 mb-1 break-words">
                     {item.description}
-                  </p>
-                  <p className="text-xs text-[#686BF3] font-bold dark:text-gray-400 mb-2">
+                  </p>s
+                  <p className="text-xs text-[#686BF3] font-bold dark:text-gray-400 mb-2 break-words">
                     Scheduled for {item.date}
                   </p>
                 </>
               )}
 
               {item.type === "Action Required" && (
-                <p className="text-gray-700 dark:text-gray-300 mb-2">
+                <p className="text-gray-700 dark:text-gray-300 mb-2 break-words">
                   {item.content}
                 </p>
               )}
 
               {item.type === "Completed" && (
-                <p className="text-gray-700 dark:text-gray-300 mb-2">
+                <p className="text-gray-700 dark:text-gray-300 mb-2 break-words">
                   {item.content}
                 </p>
               )}

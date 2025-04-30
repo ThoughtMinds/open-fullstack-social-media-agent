@@ -1,3 +1,47 @@
+// import { NextResponse } from "next/server";
+// import { 
+//   getAllPosts,
+//    getErrorPosts,
+//     // getActionRequiredPosts,
+//     // getScheduledPosts
+//    } from "./lib";
+
+// // GET /api/postData/all-posts
+// export async function GET(request: Request, { params }: { params: { slug: string } }) {
+//   const data = await getAllPosts();
+//   return NextResponse.json(data);
+// }
+
+// // GET /api/postData/error-posts
+// export async function GET_ERROR_POSTS(request: Request) {
+//   const data = await getErrorPosts();
+//   return NextResponse.json(data);
+// }
+
+// // GET /api/postData/action-required-posts
+// export async function GET_ACTION_REQUIRED_POSTS(request: Request) {
+//   const data = await getActionRequiredPosts();
+//   return NextResponse.json(data);
+// }
+
+// // GET /api/postData/scheduled-posts
+// export async function GET_SCHEDULED_POSTS(request: Request) {
+//   const data = await getScheduledPosts();
+//   return NextResponse.json(data);
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
 import { NextResponse } from "next/server";
 
 // The response structure matches the actual API response with data nested in a "data" array
