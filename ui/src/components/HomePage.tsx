@@ -298,7 +298,8 @@ const Main = () => {
   useLangGraphInterrupt<InterruptArg>({
     render: ({ event, resolve }) => {
       console.log("interrupt", state, event);
-      const { imageOptions,date } = event.value[0].action_request.args;
+      const args= event.value[0].action_request.args;
+      const { imageOptions,date } = args
       const [selected, setSelected] = React.useState<string[]>([]);
       const [selectedDate, setSelectedDate] = React.useState<string>(date);
 
@@ -312,7 +313,8 @@ const Main = () => {
 
       const confirmSelection = () => {
         console.log("Selected images:", selected);
-        resolve({image:selected[0]})
+        // resolve([{type:"response",args:`use ${selected[0]} as image and set date to ${selectedDate}`}])
+        resolve([{type:"accept",args:{args:{...args,image:selected[0],date:selectedDate}}}])
       };
 
       return (
