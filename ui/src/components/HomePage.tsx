@@ -106,7 +106,7 @@ function Header({}: HeaderProps) {
         <div className="text-center">
           <h3 className="text-lg font-bold text-2xl text-gray-800">
             <div className="bg-gradient-to-r from-[#725AF5] to-[#5E97F7] bg-clip-text text-transparent">
-              Good morning,
+              Welcome,
             </div>
             <div className="dark:text-white">{authUser?.name || "Guest"}</div>
           </h3>
@@ -289,11 +289,18 @@ const Main = () => {
       setState({ ...state, links: [link] });
     },
   });
-  useLangGraphInterrupt({
+
+  type InterruptArg={
+    image:string,
+    post:string,
+    date:string,
+  }
+  useLangGraphInterrupt<InterruptArg>({
     render: ({ event, resolve }) => {
       console.log("interrupt", state, event);
-      const { imageOptions } = event.value[0].action_request.args;
+      const { imageOptions,date } = event.value[0].action_request.args;
       const [selected, setSelected] = React.useState<string[]>([]);
+      const [selectedDate, setSelectedDate] = React.useState<string>(date);
 
       const toggleImage = (src: string) => {
         setSelected((prev) =>
@@ -305,12 +312,13 @@ const Main = () => {
 
       const confirmSelection = () => {
         console.log("Selected images:", selected);
+        resolve({image:selected[0]})
       };
 
       return (
         <div className="p-0">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-            Select Cover Image and Schedule
+            Select cover image
           </h3>
           <div className="grid grid-cols-2 gap-4">
             {imageOptions.map((src, index) => (
@@ -331,6 +339,12 @@ const Main = () => {
               </div>
             ))}
           </div>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+            When do you want to schedule the post
+          </h3>
+          <div>
+            <input className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" value={selectedDate} onChange={e=>{setSelectedDate(e.target.value)}} ></input>
+          </div>
 
           {selected.length > 0 && (
             <div className="mt-4">
@@ -338,7 +352,7 @@ const Main = () => {
                 onClick={confirmSelection}
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
               >
-                Confirm Selection ({selected.length})
+                Confirm ({selected.length})
               </button>
             </div>
           )}
