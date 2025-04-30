@@ -117,6 +117,10 @@
   --copilot-kit-background-color: #000000;
 }
 
+.dark .copilotKitWindow {
+  background-color: #000000;
+}
+
 
 @layer base {
   * {
