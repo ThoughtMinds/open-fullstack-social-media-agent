@@ -81,52 +81,52 @@
   resolved "https://registry.npmjs.org/@cfworker/json-schema/-/json-schema-4.1.1.tgz"
   integrity sha512-gAmrUZSGtKc3AiBL71iNWxDsyUC5uMaKKGdvzYsBoTW/xi42JQHl7eKV2OYzCUqvc+D2RCcf7EXY2iCyFIk6og==
 
-"@copilotkit/react-core@1.8.6", "@copilotkit/react-core@^1.8.6":
-  version "1.8.6"
-  resolved "https://registry.npmjs.org/@copilotkit/react-core/-/react-core-1.8.6.tgz"
-  integrity sha512-lrW9TWIrpq3q1+7AyE8wUj2x4a+etCc27WfKnsiQEyx0vhxKR98LAwTHuXJ1k026r3H8KRgIsvvC4sIYEBDJvA==
+"@copilotkit/react-core@1.8.9", "@copilotkit/react-core@^1.8.9":
+  version "1.8.9"
+  resolved "https://registry.yarnpkg.com/@copilotkit/react-core/-/react-core-1.8.9.tgz#f31db1c27cba20ae29bad5dc47da943cb5dbca38"
+  integrity sha512-DHiudWabc1w6pqj/wjtW+hBXRcYbs5eE8/3mA0AVR+XoTNvBF5v9DJAqag3pZ8J42ieB3keBS3sfeBPfrg36Zw==
   dependencies:
-    "@copilotkit/runtime-client-gql" "1.8.6"
-    "@copilotkit/shared" "1.8.6"
+    "@copilotkit/runtime-client-gql" "1.8.9"
+    "@copilotkit/shared" "1.8.9"
     "@scarf/scarf" "^1.3.0"
     react-markdown "^8.0.7"
     untruncate-json "^0.0.1"
 
-"@copilotkit/react-ui@^1.8.6":
-  version "1.8.6"
-  resolved "https://registry.npmjs.org/@copilotkit/react-ui/-/react-ui-1.8.6.tgz"
-  integrity sha512-N2KUBP9AKbfa4aQrr5w3mtbnJfS+7ItM4HtnN4m17d26KPpCAIh/zCEb86pYtVUSs1QZXTvGR+KXPNjh17DwvA==
+"@copilotkit/react-ui@^1.8.9":
+  version "1.8.9"
+  resolved "https://registry.yarnpkg.com/@copilotkit/react-ui/-/react-ui-1.8.9.tgz#d79bd4176fe679423a73a86f03a2d0e14070d438"
+  integrity sha512-h/dXlXjHlsZzwq6FhE89LIUByo0QcQnhEU/RWqR4Qc/qaTUhGkWT8EgAJB4zJmL4KSQEiiAOu3dRsCFj/1ZZNQ==
   dependencies:
-    "@copilotkit/react-core" "1.8.6"
-    "@copilotkit/runtime-client-gql" "1.8.6"
-    "@copilotkit/shared" "1.8.6"
+    "@copilotkit/react-core" "1.8.9"
+    "@copilotkit/runtime-client-gql" "1.8.9"
+    "@copilotkit/shared" "1.8.9"
     "@headlessui/react" "^2.1.3"
     react-markdown "^8.0.7"
     react-syntax-highlighter "^15.5.0"
     remark-gfm "^3.0.1"
     remark-math "^5.1.1"
 
-"@copilotkit/runtime-client-gql@1.8.6":
-  version "1.8.6"
-  resolved "https://registry.npmjs.org/@copilotkit/runtime-client-gql/-/runtime-client-gql-1.8.6.tgz"
-  integrity sha512-F6OZD5cBMzRC7g1fCnwXu9xuROE7F8Jkx8KqGD3mVsLO6HoWHeNVFeP2b70jTP/fBcZyNsNu6iVQwL68hmm6Rg==
+"@copilotkit/runtime-client-gql@1.8.9":
+  version "1.8.9"
+  resolved "https://registry.yarnpkg.com/@copilotkit/runtime-client-gql/-/runtime-client-gql-1.8.9.tgz#0ae13aaa72ab854195ddb7e29c428beca7131780"
+  integrity sha512-hhZbEPFpCHDQBJJ4u94pa7LE22OYOlF8cwkL10jpxiUc1ikfMDICTgZ2gqnArzwzWFiMnNFf4w3SewcPaRMoAw==
   dependencies:
-    "@copilotkit/shared" "1.8.6"
+    "@copilotkit/shared" "1.8.9"
     "@urql/core" "^5.0.3"
     untruncate-json "^0.0.1"
     urql "^4.1.0"
 
-"@copilotkit/runtime@^1.8.6":
-  version "1.8.6"
-  resolved "https://registry.npmjs.org/@copilotkit/runtime/-/runtime-1.8.6.tgz"
-  integrity sha512-a+7vvHgpAT/h8I047uHYsXN2xSqPlu6qHQmohK2+R+xSUDYfcNGHLioVtlwbnYTk9VMr1PDinlIH6jU7KDLe6A==
+"@copilotkit/runtime@^1.8.9":
+  version "1.8.9"
+  resolved "https://registry.yarnpkg.com/@copilotkit/runtime/-/runtime-1.8.9.tgz#8f31978ad5ac33a9f812091549de4cc650cf94be"
+  integrity sha512-NwhALsDgSDoiv10N8cKRVk+9884fyHMHDuz1fpbr313wYvoBH6pCRO4r3ZLOAGJ6tYoIWzVah24VtwuSRw57yw==
   dependencies:
     "@agentwire/client" "0.0.26"
     "@agentwire/core" "0.0.26"
     "@agentwire/encoder" "0.0.26"
     "@agentwire/proto" "0.0.26"
     "@anthropic-ai/sdk" "^0.27.3"
-    "@copilotkit/shared" "1.8.6"
+    "@copilotkit/shared" "1.8.9"
     "@graphql-yoga/plugin-defer-stream" "^3.3.1"
     "@langchain/community" "^0.3.29"
     "@langchain/core" "^0.3.38"
@@ -150,10 +150,10 @@
     type-graphql "2.0.0-rc.1"
     zod "^3.23.3"
 
-"@copilotkit/shared@1.8.6":
-  version "1.8.6"
-  resolved "https://registry.npmjs.org/@copilotkit/shared/-/shared-1.8.6.tgz"
-  integrity sha512-/PXnsIHcBlHMz9TZTcvYqGpVtCu9KYd3SwObbc6zCzlZfTxiKQgUhZFpOwtuoj3FQe2oUKqdfwXp3LgfVp33gg==
+"@copilotkit/shared@1.8.9":
+  version "1.8.9"
+  resolved "https://registry.yarnpkg.com/@copilotkit/shared/-/shared-1.8.9.tgz#0d6d944b7cc9d6ed2f0eaf50900708735cefa826"
+  integrity sha512-KHwk3yI20k6e0HVkuB2NjpFv+XV0Po+INKhpNoUOYmpsfbqnTFQm+BoKPuFw1M5opGle/kRUU4Udd1tn4fc9pw==
   dependencies:
     "@segment/analytics-node" "^2.1.2"
     chalk "4.1.2"

@@ -1,15 +1,16 @@
 import { StateGraph, Annotation, LangGraphRunnableConfig, START, END} from "@langchain/langgraph";
 import {generatePostGraph} from "../../generate-post/generate-post-graph.js"
+import {GeneratePostAnnotation} from "../../generate-post/generate-post-state.js"
 import { CopilotKitStateAnnotation } from "@copilotkit/sdk-js/langgraph";
+
 
 
 const WrapperStateAnnotation = Annotation.Root({
     // foo: Annotation<string>,
-    // ...CopilotKitStateAnnotation.spec,
-    links: Annotation<string[]>
+    ...CopilotKitStateAnnotation.spec,
+    ...GeneratePostAnnotation.spec
   });
   const WrapperStateInputAnnotation = Annotation.Root({
-    // ...CopilotKitStateAnnotation.spec,
     links: Annotation<string[]>
   });
 
