@@ -5,11 +5,11 @@ import { CopilotKitStateAnnotation } from "@copilotkit/sdk-js/langgraph";
 
 const WrapperStateAnnotation = Annotation.Root({
     // foo: Annotation<string>,
-    ...CopilotKitStateAnnotation.spec,
-    links: Annotation<string>
+    // ...CopilotKitStateAnnotation.spec,
+    links: Annotation<string[]>
   });
   const WrapperStateInputAnnotation = Annotation.Root({
-    ...CopilotKitStateAnnotation.spec,
+    // ...CopilotKitStateAnnotation.spec,
     links: Annotation<string[]>
   });
 
@@ -26,7 +26,7 @@ const WrapperStateAnnotation = Annotation.Root({
 // }
 
 
-const generatePostWrapperBuilder = new StateGraph({stateSchema:WrapperStateAnnotation,input:WrapperStateInputAnnotation},WrapperConfigurableAnnotation)
+const generatePostWrapperBuilder = new StateGraph({stateSchema:WrapperStateAnnotation,input:WrapperStateInputAnnotation})
   .addNode("generate_post_graph",generatePostGraph)
   .addEdge(START, "generate_post_graph")
   .addEdge("generate_post_graph", END)
