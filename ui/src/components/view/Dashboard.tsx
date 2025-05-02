@@ -72,11 +72,11 @@ const Dashboard = () => {
     // Call immediately on mount or filter change
     fetchData();
 
-    // Set up interval to call every 5 seconds
-    const intervalId = setInterval(fetchData, 5000);
+    // // Set up interval to call every 5 seconds
+    // const intervalId = setInterval(fetchData, 5000);
 
-    // Cleanup interval on unmount or filter change
-    return () => clearInterval(intervalId);
+    // // Cleanup interval on unmount or filter change
+    // return () => clearInterval(intervalId);
   }, [filter, setIsLoading, setScheduledItems]);
 
 
