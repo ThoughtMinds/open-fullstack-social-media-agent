@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { dateFnsLocalizer, View } from "react-big-calendar";
 import { CalendarProps, Event as RBCEvent } from "react-big-calendar";
-import { format, parse, startOfWeek, getDay, addMonths, subMonths, addHours } from "date-fns";
+import { format, parse, startOfWeek, getDay, addMonths, subMonths, addHours,endOfDay } from "date-fns";
 import { enUS } from "date-fns/locale";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -51,7 +51,7 @@ const Schedule = () => {
             id: item.thread_id,
             title: item.title,
             start,
-            end: addHours(start, 1),
+            end: endOfDay(start),
             backgroundColor: "#4CAF50",
           };
         })
