@@ -30,21 +30,21 @@ async function getAllPosts(): Promise<PostResponse[]> {
     const threads = await client.threads.search({
       limit: 300,
       metadata: {
-        graph_id: "generate_post_copilotkit_wrapper",
+        graph_id: "upload_post",
       },
     });
         // Filter for idle or busy threads
-    const interruptedThreads = threads.filter(
-            (t: any) => t.status === "interrupted"
+    const busyThreads = threads.filter(
+            (t: any) => t.status === "busy"
     );
 
-    console.log(`Found ${interruptedThreads.length} threads`);
+    console.log(`Found ${busyThreads.length} threads`);
 
     // Array to store the posts
     const posts: PostResponse[] = [];
     
     // Process each thread to extract values
-    for (const thread of interruptedThreads) {
+    for (const thread of busyThreads) {
       try {
         // Get the thread state to access the values
         const threadState = await client.threads.getState(thread.thread_id);
@@ -139,5 +139,13 @@ export async function GET() {
     );
   }
 }
+
+
+
+
+
+
+
+
 
 

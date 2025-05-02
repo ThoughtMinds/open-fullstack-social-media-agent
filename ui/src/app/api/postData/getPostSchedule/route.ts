@@ -5,16 +5,8 @@ import { Client } from "@langchain/langgraph-sdk";
 // Define the response format to match the desired output
 interface PostResponse {
   thread_id: string;
-  run_id: string;
   title: string;
   post: string;
-  image?: {
-    imageUrl: string;
-    mimeType: string;
-  };
-  images?: {
-    imageUrl: string;
-  }[];
   status: string;
   scheduleDate: string;
 }
@@ -30,21 +22,27 @@ async function getAllPosts(): Promise<PostResponse[]> {
     const threads = await client.threads.search({
       limit: 300,
       metadata: {
-        graph_id: "generate_post_copilotkit_wrapper",
+        graph_id: "upload_post",
       },
     });
         // Filter for idle or busy threads
-    const interruptedThreads = threads.filter(
-            (t: any) => t.status === "interrupted"
+    const busyThreads = threads.filter(
+            (t: any) => t.status === "busy"
     );
+    // const busyThreads = await client.threads.search({
+    //     limit: 300,
+    //     metadata: {
+    //       graph_id: "generate_post_copilotkit_wrapper",
+    //     },
+    //   });
 
-    console.log(`Found ${interruptedThreads.length} threads`);
+    console.log(`Found ${busyThreads.length} threads`);
 
     // Array to store the posts
     const posts: PostResponse[] = [];
     
     // Process each thread to extract values
-    for (const thread of interruptedThreads) {
+    for (const thread of busyThreads) {
       try {
         // Get the thread state to access the values
         const threadState = await client.threads.getState(thread.thread_id);
@@ -53,29 +51,18 @@ async function getAllPosts(): Promise<PostResponse[]> {
 
         // Check if the thread state has the values we need
         if (threadState.values) {
-          const { post, imageOptions, scheduleDate } = threadState.values;
+          const { post, scheduleDate } = threadState.values;
           
           if (post) {
             // Split the post content by the first "\n\n" to extract title and body
             const [title, ...postBody] = post.split("\n\n");
             const postContent = postBody.join("\n\n"); // Rejoin the rest as the post body
-
-            // Select the first image from imageOptions as primary image, and the rest as additional images
-            const imageUrl = imageOptions && imageOptions.length > 0 ? imageOptions[0] : undefined;
-            const additionalImages = imageOptions && imageOptions.length > 1 ? imageOptions.slice(1) : undefined;
              //Action Required, Scheduled, Completed, Error
             // Create the post response object
             const postResponse: PostResponse = {
               thread_id: thread.thread_id,
               title: title || `Post for ${new Date(scheduleDate).toLocaleDateString()}`, // Fallback title
               post: postContent || "", // Ensure post is not undefined
-              image: imageUrl ? {
-                imageUrl,
-                mimeType: determineImageMimeType(imageUrl)
-              } : undefined,
-              images: additionalImages ? additionalImages.map((url: string) => ({
-                imageUrl: url,
-              })) : undefined,
               status: "Scheduled",
               scheduleDate // Using the scheduleDate directly from thread values
             };
@@ -104,28 +91,7 @@ async function getAllPosts(): Promise<PostResponse[]> {
   }
 }
 
-// Helper function to determine MIME type based on image URL
-function determineImageMimeType(imageUrl: string): string {
-  if (!imageUrl) return "image/jpeg"; // Default
-  
-  const extension = imageUrl.split('.').pop()?.toLowerCase();
-  
-  switch (extension) {
-    case 'jpg':
-    case 'jpeg':
-      return 'image/jpeg';
-    case 'png':
-      return 'image/png';
-    case 'gif':
-      return 'image/gif';
-    case 'webp':
-      return 'image/webp';
-    case 'svg':
-      return 'image/svg+xml';
-    default:
-      return 'image/jpeg'; // Default fallback
-  }
-}
+
 
 export async function GET() {
   try {
@@ -139,5 +105,44 @@ export async function GET() {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

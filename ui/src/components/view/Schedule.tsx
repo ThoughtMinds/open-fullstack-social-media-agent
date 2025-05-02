@@ -36,10 +36,12 @@ const Schedule = () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await fetch("/api/postData");
+      // const response = await fetch("/api/postData");
+      const response = await fetch("/api/postData/getPostSchedule")
+      console.log("response",response)
       if (!response.ok) throw new Error("Failed to fetch schedules");
-      const { data } = await response.json();
-
+      const data = await response.json();
+      console.log("data",data)
       const calendarEvents = data
         .filter((item: ApiEvent) => item.status === "Scheduled")
         .map((item: ApiEvent) => {
