@@ -1,4 +1,6 @@
 import { client } from "./client";
+import { Client } from "@langchain/langgraph-sdk";
+import "dotenv/config";
 
 // Add this to your lib/types.ts file
 export interface ScheduledPost {
@@ -9,7 +11,7 @@ export interface ScheduledPost {
   scheduledDate: string; // Format: YYYY-MM-DD
   scheduledTime: string; // Format: HH:MM
   status?: "draft" | "scheduled" | "published" | "failed";
-  platformIds?: string[]; // IDs of platforms where this will be posted (e.g., "twitter", "facebook")
+  platformIds?: string[]; // IDs of platforms where this will be posted
   createdAt?: string; // ISO timestamp of creation
   updatedAt?: string; // ISO timestamp of last update
   engagementStats?: {
@@ -22,117 +24,132 @@ export interface ScheduledPost {
 // Define the PendingRun type
 export interface PendingRun {
   thread_id: string;
-  run_id: string;
+  run_id?: string;
   post: string;
   image?: {
     imageUrl: string;
     mimeType: string;
   };
+  images?: {
+    imageUrl: string;
+  }[];
   scheduleDate: string;
+  status?: string;
+  title?: string;
+  report?: string;
+  links?: string[];
+  pageContents?: string;
+  relevantLinks?: string[];
+}
+
+// Interface for thread state values
+interface ThreadStateValues {
+  post?: string;
+  imageOptions?: string[];
+  scheduleDate?: string;
+  report?: string;
+  links?: string[];
+  pageContent?: string;
+  relevantLinks?: string[];
+  title?: string;
 }
 
 export const getSinglePost = {
   name: "GetSinglePost",
-  description: "Retrieves details of a single post by its ID",
+  description: "Retrieves details of a single post by its thread ID",
   parameters: [
     {
-      name: "post_id",
+      name: "thread_id",
       type: "string",
-      description: "Unique identifier of the post to retrieve",
+      description: "Unique identifier of the thread containing the post",
       required: true,
     },
   ],
-  handler: async ({ post_id }: { post_id: string }) => {
-    try {
-      // Sample posts database (in a real app, this would be a database query)
-      const posts: Record<string, ScheduledPost> = {
-        "post-1": {
-          id: "post-1",
-          name: "New Product Launch",
-          imageUrl: "https://example.com/images/product-launch.jpg",
-          description:
-            "Announcing our revolutionary new product that will change the industry forever! Join us for an exclusive first look.",
-          scheduledDate: "2025-05-15",
-          scheduledTime: "09:00",
-          status: "scheduled",
-          platformIds: ["twitter", "linkedin"],
-          createdAt: "2025-04-10T12:34:56Z",
-          updatedAt: "2025-04-10T15:22:33Z",
-          engagementStats: {
-            likes: 0,
-            shares: 0,
-            comments: 0,
-          },
-        },
-        "post-2": {
-          id: "post-2",
-          name: "Summer Sale Promotion",
-          imageUrl: "https://example.com/images/summer-sale.jpg",
-          description:
-            "Beat the heat with our biggest summer sale yet! Get up to 50% off on all summer essentials.",
-          scheduledDate: "2025-05-20",
-          scheduledTime: "10:30",
-          status: "scheduled",
-          platformIds: ["facebook", "instagram"],
-          createdAt: "2025-04-12T09:15:22Z",
-          updatedAt: "2025-04-12T09:15:22Z",
-          engagementStats: {
-            likes: 0,
-            shares: 0,
-            comments: 0,
-          },
-        },
-        "post-3": {
-          id: "post-3",
-          name: "Customer Spotlight: Success Story",
-          imageUrl: "https://example.com/images/customer-story.jpg",
-          description:
-            "Read how our platform helped Company X increase their productivity by 200% in just three months.",
-          scheduledDate: "2025-05-25",
-          scheduledTime: "14:00",
-          status: "draft",
-          platformIds: ["linkedin"],
-          createdAt: "2025-04-15T16:45:12Z",
-          updatedAt: "2025-04-16T10:22:45Z",
-          engagementStats: {
-            likes: 0,
-            shares: 0,
-            comments: 0,
-          },
-        },
+  handler: async ({ thread_id }: { thread_id: string }) => {
+    // Validate threadId
+    if (!thread_id || typeof thread_id !== "string" || thread_id.trim() === "") {
+      return {
+        status: "error",
+        message: "Invalid thread ID",
       };
+    }
 
-      // Check if the post exists
-      if (!posts[post_id]) {
+    // Check for required environment variable
+    if (!process.env.LANGGRAPH_API_URL) {
+      return {
+        status: "error",
+        message: "LANGGRAPH_API_URL is not configured",
+      };
+    }
+
+    try {
+      // Initialize the LangGraph client
+      const langGraphClient = new Client({
+        apiUrl: process.env.LANGGRAPH_API_URL,
+      });
+
+      // Fetch thread and state concurrently
+      const [thread, threadState] = await Promise.all([
+        langGraphClient.threads.get(thread_id),
+        langGraphClient.threads.getState(thread_id)
+      ]);
+
+      const values = threadState.values as ThreadStateValues | undefined;
+
+      if (!values?.post) {
+        console.log(`No post content found in thread ${thread_id}`);
         return {
           status: "error",
-          message: `Post with ID ${post_id} not found`,
+          message: `Post not found for thread ID ${thread_id}`,
         };
       }
 
-      // Transform the post to match PendingRun type
-      const post = posts[post_id];
-      const pendingRunPost: PendingRun = {
-        thread_id: `thread_${post_id}`, // Generate a thread_id (modify as per your logic)
-        run_id: `run_${post_id}`, // Generate a run_id (modify as per your logic)
-        post: post.description, // Map description to post
-        image: post.imageUrl
-          ? {
-              imageUrl: post.imageUrl,
-              mimeType: "image/jpeg", // Assume JPEG, adjust based on actual image type
-            }
-          : undefined,
-        scheduleDate: `${post.scheduledDate}T${post.scheduledTime}:00Z`, // Combine date and time into ISO format
+      const { post, imageOptions, scheduleDate, report, links, pageContent, relevantLinks, title } = values;
+
+      // Split post content safely if no explicit title is provided
+      let postTitle = title || "";
+      let postContent = post;
+      
+      if (!title && post) {
+        const parts = post.split("\n\n");
+        if (parts.length > 1) {
+          postTitle = parts[0];
+          postContent = parts.slice(1).join("\n\n");
+        }
+      }
+
+      // Handle images
+      const primaryImage = imageOptions?.[0];
+      const additionalImages = imageOptions?.slice(1);
+
+      const postResponse: PendingRun = {
+        thread_id: thread_id,
+        run_id: thread.run_id, // Add run_id from thread if available
+        title: postTitle || `Post for ${scheduleDate ? new Date(scheduleDate).toLocaleDateString() : 'Untitled'}`,
+        post: postContent,
+        image: primaryImage ? {
+          imageUrl: primaryImage,
+          mimeType: determineImageMimeType(primaryImage)
+        } : undefined,
+        images: additionalImages?.length ? additionalImages.map(url => ({
+          imageUrl: url
+        })) : undefined,
+        status: scheduleDate && new Date(scheduleDate) > new Date() ? "Scheduled" : "Published",
+        scheduleDate: scheduleDate || new Date().toISOString(),
+        report: report || undefined,
+        links: links?.length ? links : undefined,
+        pageContents: pageContent || undefined,
+        relevantLinks: relevantLinks?.length ? relevantLinks : undefined
       };
 
-      console.log(`Retrieved post with ID: ${post_id}`);
+      console.log(`Retrieved post from thread ${thread_id}`);
 
       return {
         status: "success",
-        data: pendingRunPost,
+        data: postResponse,
       };
     } catch (error) {
-      console.error(`Error fetching post ${post_id}:`, error);
+      console.error(`Error fetching post for thread ${thread_id}:`, error);
       return {
         status: "error",
         message: "Failed to retrieve post",
@@ -141,6 +158,22 @@ export const getSinglePost = {
     }
   },
 };
+
+// Helper function to determine MIME type
+function determineImageMimeType(imageUrl: string): string {
+  const extension = imageUrl.split('.').pop()?.toLowerCase() || '';
+  
+  const mimeTypes: Record<string, string> = {
+    'jpg': 'image/jpeg',
+    'jpeg': 'image/jpeg',
+    'png': 'image/png',
+    'gif': 'image/gif',
+    'webp': 'image/webp',
+    'svg': 'image/svg+xml'
+  };
+
+  return mimeTypes[extension] || 'image/jpeg';
+}
 
 
 
