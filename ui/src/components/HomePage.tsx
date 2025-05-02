@@ -143,6 +143,8 @@ const CustomAssistantMessage = (props: AssistantMessageProps) => {
 
   // Return null if not loading and no message or subComponent
   if (!isLoading && !message && !subComponent) {
+    console.log("if no msg there")
+
     return null;
   }
 

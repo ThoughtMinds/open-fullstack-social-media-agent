@@ -31,7 +31,7 @@ async function createCron() {
     schedule: "0 8 * * *", // Runs at 8:00 AM UTC every day (1AM PST)
     config: {
       configurable: {
-        slackChannelId: "ADD_SLACK_CHANNEL_ID_HERE",
+        slackChannelId: "C08PGUEQNGZ",
         maxDaysHistory: 1,
         [SKIP_CONTENT_RELEVANCY_CHECK]: true,
         [SKIP_USED_URLS_CHECK]: true,

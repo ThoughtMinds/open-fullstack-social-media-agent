@@ -14,7 +14,7 @@ import {
   updateThreadState,
   listThreads,
   schedulePost,
-  createCron,
+  generateCronForPostBlog,
   deleteCron,
   listCrons,
   getSinglePost,
@@ -53,20 +53,20 @@ const serviceAdapter = new LangChainAdapter({
 
 // Initialize CopilotRuntime
 const runtime = new CopilotRuntime({
-  // actions: ({ properties, url }) => [
-  //   generatePostForBlog,
-  //   threadCreation,
-  //   getThreadState,
-  //   updateThreadState,
-  //   listThreads,
-  //   schedulePost,
-  //   createCron,
-  //   deleteCron,
-  //   listCrons,
-  //   getSinglePost,
-  //   getScheduledPosts
+  actions: ({ properties, url }) => [
+    // generatePostForBlog,
+    threadCreation,
+    getThreadState,
+    updateThreadState,
+    listThreads,
+    schedulePost,
+    generateCronForPostBlog,
+    deleteCron,
+    listCrons,
+    getSinglePost,
+    getScheduledPosts
     
-  // ],
+  ],
   remoteEndpoints: [
     langGraphPlatformEndpoint({
       deploymentUrl: process.env.AGENT_DEPLOYMENT_URL || "http://127.0.0.1:54367",
