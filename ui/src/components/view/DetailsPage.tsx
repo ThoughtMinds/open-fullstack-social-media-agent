@@ -14,11 +14,16 @@ type PostItem = {
   id: string;
   title: string;
   description: string;
-  image?: string;
+  image?: {
+    imageUrl: string;
+    mimeType: string;
+  };
+  images?: {
+    imageUrl: string;
+  }[];
   url?: string;
   status: string;
   scheduleDate: string;
-  images?: string[];
   report?: string;
   links?: string[];
   pageContents?: string;
@@ -51,7 +56,7 @@ const DetailsPage = () => {
     const fetchItem = async () => {
       const res = await fetch(`/api/postData/getPost?threadId=${id}`);
       const foundItem = await res.json();
-      console.log("foundItem",foundItem)
+      console.log("foundItem", foundItem)
 
 
       if (foundItem) {
@@ -109,7 +114,7 @@ const DetailsPage = () => {
         <div className="p-5">
           <div className="bg-white rounded-md shadow-sm overflow-hidden mb-5 border dark:bg-black dark:border-white">
             <img
-              src={item.image}
+              src={item?.image?.imageUrl}
               alt={item.title}
               className="w-full h-[316px] object-cover"
             />
@@ -138,7 +143,7 @@ const DetailsPage = () => {
                   isOpen={expandedSections.report}
                   onToggle={() => toggleSection("report")}
                 >
-                  <p className="text-sm text-gray-700"><Markdown content={item.report}/></p>
+                  <p className="text-sm text-gray-700"><Markdown content={item.report} /></p>
                 </CollapsibleSection>
 
                 <CollapsibleSection
@@ -149,17 +154,24 @@ const DetailsPage = () => {
                   <p className="text-sm text-gray-700">{item.scheduleDate}</p>
                 </CollapsibleSection>
 
+
                 <CollapsibleSection
                   title="Image Options"
                   isOpen={expandedSections.imageOptions}
                   onToggle={() => toggleSection("imageOptions")}
                 >
                   {item?.images && item?.images?.length > 0 ? (
-                    <img
-                      src={item?.images[0]?.imageUrl} // Show only the first image
-                      alt="First image option"
-                      className="rounded-md object-cover w-full h-32"
-                    />
+                    <div className="grid grid-cols-2 gap-3 mt-2">
+                      {item.images.map((image, index) => (
+                        <div key={index} className="relative">
+                          <img
+                            src={image?.imageUrl}
+                            alt={`Image option ${index + 1}`}
+                            className="rounded-md object-cover w-full h-32"
+                          />
+                        </div>
+                      ))}
+                    </div>
                   ) : (
                     <p className="text-sm text-gray-600">
                       No alternative images available.

@@ -30,7 +30,7 @@ interface PostResponse {
   scheduleDate: string;
   report?: string;
   links?: string[];
-  pageContent?: string;
+  pageContents?: string;
   relevantLinks?: string[];
 }
 
@@ -90,7 +90,7 @@ async function getPost(threadId: string): Promise<PostResponse | null> {
       scheduleDate: scheduleDate || new Date().toISOString(),
       report: report || undefined,
       links: links?.length ? links : undefined,
-      pageContent: pageContent || undefined,
+      pageContents: pageContent || undefined,
       relevantLinks: relevantLinks?.length ? relevantLinks : undefined
     };
 

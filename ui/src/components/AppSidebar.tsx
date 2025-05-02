@@ -41,11 +41,11 @@ const items = [
   //   url: "#",
   //   icon: Search,
   // },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
-  },
+  // {
+  //   title: "Settings",
+  //   url: "#",
+  //   icon: Settings,
+  // },
 ];
 
 export function AppSidebar() {

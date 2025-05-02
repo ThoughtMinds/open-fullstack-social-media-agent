@@ -147,7 +147,9 @@ const Dashboard = () => {
         </h1>
 
         <div className="flex gap-2 flex-wrap">
-          {["All", "Scheduled", "Action Required", "Error"].map((type) => {
+          {
+            // ["All", "Scheduled", "Action Required", "Error"]
+          ["All", "Scheduled"].map((type) => {
             const isActive = filter === type;
 
             return (
@@ -173,7 +175,7 @@ const Dashboard = () => {
         {filteredItems.map((item) => (
           <Card
             key={item.id}
-            onClick={() => router.push(`/dashboard/${item.id}`)}
+            onClick={() => filter === "All" && router.push(`/dashboard/${item.id}`)}
             className="h-fit p-2 w-[333.5px] bg-[#D4DFFC] hover:shadow-lg transition-shadow dark:bg-black dark:border-gray-600 cursor-pointer"
           >
             <CardContent className="p-2">

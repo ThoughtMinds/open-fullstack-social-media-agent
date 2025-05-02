@@ -5,10 +5,25 @@ import { Client } from "@langchain/langgraph-sdk";
 // Define the response format to match the desired output
 interface PostResponse {
   thread_id: string;
-  title: string;
+  run_id: string;
   post: string;
-  status: string;
+  image?: string; // Optional as it might not always be present
   scheduleDate: string;
+  status: string;
+  title: string;
+}
+
+// Define the Run type for type safety
+interface Run {
+  run_id: string;
+  created_at: string;
+  kwargs?: {
+    input?: {
+      post?: string;
+      image?: string;
+      title?: string;
+    };
+  };
 }
 
 async function getAllPosts(): Promise<PostResponse[]> {
@@ -18,23 +33,19 @@ async function getAllPosts(): Promise<PostResponse[]> {
       apiUrl: process.env.LANGGRAPH_API_URL,
     });
 
-    // Fetch threads with graph_id: "generate_post_copilotkit_wrapper"
-    const threads = await client.threads.search({
-      limit: 300,
+    if (!process.env.LANGGRAPH_API_URL) {
+      throw new Error("LANGGRAPH_API_URL is not defined in environment variables");
+    }
+
+    // Fetch threads with graph_id: "upload_post"
+    const busyThreads = await client.threads.search({
       metadata: {
         graph_id: "upload_post",
       },
+      status: "busy",
+      // Consider adding pagination if you expect many threads
+      // page_size: 100,
     });
-        // Filter for idle or busy threads
-    const busyThreads = threads.filter(
-            (t: any) => t.status === "busy"
-    );
-    // const busyThreads = await client.threads.search({
-    //     limit: 300,
-    //     metadata: {
-    //       graph_id: "generate_post_copilotkit_wrapper",
-    //     },
-    //   });
 
     console.log(`Found ${busyThreads.length} threads`);
 
@@ -44,39 +55,42 @@ async function getAllPosts(): Promise<PostResponse[]> {
     // Process each thread to extract values
     for (const thread of busyThreads) {
       try {
-        // Get the thread state to access the values
-        const threadState = await client.threads.getState(thread.thread_id);
+        const runs = await client.runs.list(thread.thread_id);
         
-        console.log("threadState",threadState)
-
-        // Check if the thread state has the values we need
-        if (threadState.values) {
-          const { post, scheduleDate } = threadState.values;
-          
-          if (post) {
-            // Split the post content by the first "\n\n" to extract title and body
-            const [title, ...postBody] = post.split("\n\n");
-            const postContent = postBody.join("\n\n"); // Rejoin the rest as the post body
-             //Action Required, Scheduled, Completed, Error
-            // Create the post response object
-            const postResponse: PostResponse = {
-              thread_id: thread.thread_id,
-              title: title || `Post for ${new Date(scheduleDate).toLocaleDateString()}`, // Fallback title
-              post: postContent || "", // Ensure post is not undefined
-              status: "Scheduled",
-              scheduleDate // Using the scheduleDate directly from thread values
-            };
-            
-            posts.push(postResponse);
-            console.log(`Extracted post from thread ${thread.thread_id}`);
-          } else {
-            console.log(`No post content found in thread ${thread.thread_id}`);
-          }
-        } else {
-          console.log(`No values found in thread state for ${thread.thread_id}`);
+        if (!runs || runs.length === 0) {
+          console.warn(`No run found for thread ${thread.thread_id}`);
+          continue;
         }
+        
+        const run = runs[0] as Run;
+        
+        if (!run || !run.kwargs?.input) {
+          console.warn(`No valid run data or input for thread ${thread.thread_id}`);
+          continue;
+        }
+
+        const input = run.kwargs.input;
+        
+        // Extract the necessary data from the run with defaults for required fields
+        const postResponse: PostResponse = {
+          thread_id: thread.thread_id,
+          run_id: run.run_id,
+          post: input.post || "",
+          title: input.title || "Untitled Post", // Default title if missing
+          status: "Scheduled", // Default status
+          scheduleDate: run.created_at
+        };
+
+        // Add image if available
+        if (input.image) {
+          postResponse.image = input.image;
+        }
+          
+        posts.push(postResponse);
+        console.log(`Extracted post from thread ${thread.thread_id}`);
       } catch (threadError) {
         console.error(`Error processing thread ${thread.thread_id}:`, threadError);
+        // Continue with next thread instead of breaking the entire function
       }
     }
 
@@ -91,8 +105,6 @@ async function getAllPosts(): Promise<PostResponse[]> {
   }
 }
 
-
-
 export async function GET() {
   try {
     const posts = await getAllPosts();
@@ -100,14 +112,11 @@ export async function GET() {
   } catch (error) {
     console.error("API error:", error);
     return NextResponse.json(
-      { error: "Failed to retrieve posts" },
+      { error: error instanceof Error ? error.message : "Failed to retrieve posts" },
       { status: 500 }
     );
   }
 }
-
-
-
 
 
 

@@ -141,10 +141,9 @@ const CustomAssistantMessage = (props: AssistantMessageProps) => {
   const messageStyles =
     "p-[12px] dark:text-black rounded-tl-none rounded-xl bg-[#ECF1FE]";
 
-  // Return null if not loading and no message or subComponent
-  if (!isLoading && !message && !subComponent) {
-    console.log("if no msg there")
-
+  // More robust check - handle empty strings and verify content exists
+  if (!isLoading && (!message || message.trim() === "") && !subComponent) {
+    console.log("No message or subcomponent to display - skipping render");
     return null;
   }
 
