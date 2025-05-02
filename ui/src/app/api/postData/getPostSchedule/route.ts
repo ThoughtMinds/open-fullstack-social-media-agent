@@ -76,7 +76,7 @@ async function getAllPosts(): Promise<PostResponse[]> {
           thread_id: thread.thread_id,
           run_id: run.run_id,
           post: input.post || "",
-          title: input.title || "Untitled Post", // Default title if missing
+          title: input?.post?.split("\n")[0] || "Untitled Post", // Default title if missing
           status: "Scheduled", // Default status
           scheduleDate: run.created_at
         };
